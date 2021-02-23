@@ -1,0 +1,104 @@
+    1  sudo apt-get install r-base
+    2  sudo apt-get install gdebi-core
+    3  wget https://download2.rstudio.org/server/bionic/amd64/rstudio-server-1.4.1103-amd64.deb
+    4  sudo gdebi rstudio-server-1.4.1103-amd64.deb
+    5  apt-get update && apt-get install wget
+    6  sudo apt-get update && apt-get install wget
+    7  sudo apt-get update && sudo apt-get install wget
+    8  sudo apt-get install gdebi-core
+    9  wget https://download2.rstudio.org/server/bionic/amd64/rstudio-server-1.4.1103-amd64.deb
+   10  sudo gdebi rstudio-server-1.4.1103-amd64.deb
+   11  useradd leipzig
+   12  whomai
+   13  whoami
+   14  passwd
+   15  sudo passwd leipzig
+   16  passwd
+   17  sudo su
+   18  exit
+   19  conda create -n quertermous pysradb
+   20  cd ..
+   21  conda config --add channels bioconda
+   22  conda config --add channels conda-forge
+   23  conda config --add channels bioconda
+   24  conda config --add channels conda-forge
+   25  conda config --add channels defaults
+   26  conda config --add channels bioconda
+   27  conda config --add channels conda-forge
+   28  cd ~
+   29  ls
+   30  conda create -n quertermous pysradb
+   31  conda activate quertermous
+   32  pysradb
+   33  mkdir metadata
+   34  pysradb metadata --db  --detailed --expand --saveto metadata/SRP142360.metadata
+   35  pysradb metadata --db  --detailed --expand --saveto metadata/SRP142360.metadata  SRP142360
+   36  pysradb metadata --detailed --expand --saveto metadata/SRP142360.metadata  SRP142360
+   37  gcloud compute disks resize DISK_NAME     --region REGION      --size DISK_SIZE
+   38  gcloud compute disks
+   39  gcloud compute disks list
+   40  ls
+   41  rm -r SRAmetadb.sqlite
+   42  gcloud compute disks list
+   43  df -k
+   44  df 00h
+   45  df -h
+   46  sudo apt -y install cloud-guest-utils
+   47  lsblk
+   48  sudo growpart /dev/sda 1
+   49  df -h
+   50  bash
+   51  df -h
+   52  sudo resize2fs /dev/sda 1
+   53  sudo reboot
+   54  git clone https://github.com/leipzig/placenta
+   55  apt-get update
+   56  sudo su
+   57  sudo apt-get update
+   58  sudo apt-getstall build-essentials
+   59  sudo apt-getstall buildessentials
+   60  sudo apt-get install build-essentials
+   61  sudo apt-get install build-essential
+   62  sudo apt-get install git
+   63  git clone https://github.com/leipzig/placenta
+   64  cd placenta/
+   65  ls
+   66  conda create -n quertermous pysradb
+   67  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+   68  sh Miniconda3-latest-Linux-x86_64.sh 
+   69  conda create -n quertermous pysradb
+   70  bash
+   71  cd ~
+   72  ls
+   73  df -jh
+   74  df -h
+   75  gunzip SRAmetadb.sqlite.gz 
+   76  pysradb metadata --detailed --expand --saveto metadata/SRP142360.metadata  SRP142360
+   77  conda activate quertermous
+   78  pysradb metadata --detailed --expand --saveto metadata/SRP142360.metadata  SRP142360
+   79  pysrab search SRP142360
+   80  pysradb search SRP142360
+   81  pysradb
+   82  pysradb metadata SRP142360
+   83  history
+   84  pysradb metadata --db SRAmetadb.sqlite --detailed --expand --saveto metadata/SRP141397.metadata
+   85  pysradb metadata --db SRAmetadb.sqlite --detailed --expand --saveto metadata/SRP141397.metadata SRP141397
+   86  pysradb metadata --db SRAmetadb.sqlite --detailed --expand --saveto metadata/SRP142360.metadata SRP142360
+   87  pysradb metadata SRP075720 --detailed
+   88  ls -alt
+   89  pysradb
+   90  ls
+   91  rm SRAmetadb.sqlite 
+   92  pysradb metadata --db SRAmetadb.sqlite --detailed --expand --saveto metadata/SRP142360.metadata SRP142360
+   93  pysradb metadata --detailed --expand --saveto metadata/SRP142360.metadata SRP142360
+   94  pysradb --version
+   95  git clone https://github.com/saketkc/pysradb.git
+   96  ls
+   97  cd pysradb/
+   98  ls
+   99  pip install .
+  100  cd ..
+  101  pysradb metadata --detailed --expand --saveto metadata/SRP142360.metadata SRP142360
+  102  more metadata/SRP142360.metadata 
+  103  history 
+  104  history > setup.txt
