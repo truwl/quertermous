@@ -6,7 +6,7 @@ import sys
 READLENGTHS = [36,75]
 
 #from utils import metautils
-#metautils.srpMeta('SRP141397')
+#metautils.srpMeta('SRP142360')
 #study_accession            experiment_accession            sample_accession            run_accession            experiment_title            experiment_attribute            taxon_id            library_selection            library_layout            library_strategy            library_source            library_name            bases            spots            adapter_spec            avg_read_length
 #      SRP141397                      SRX3980107                  SRS3205258                SRR7049033                S78_shotgun                                                   0                       RANDOM                  PAIRED -                         WGS               METAGENOMIC             S78_shotgun        229716627          1009555                                 227.54245880610765
 
@@ -20,14 +20,24 @@ class srpMeta():
     def __init__(self,SRP):
         self.srp=SRP
         self.st = pandas.read_csv("metadata/"+SRP+".metadata",sep="\t")
+        #cell.line not pandas friendly
+        self.st.columns = self.st.columns.str.replace('.', '')
         #['NA06984.1.M_111124_4_1.fastq.gz', 'NA06984.1.M_111124_4_2.fastq.gz', 
     
-    def process(self):
+    def process(self,gstype='gs'):
         #create the gs specific paths
         #gs://truwl-quertermous/SRR7058289/102901.1.fastq.gz
         #gs://truwl-quertermous/SRR7058289/102901.2.fastq.gz
-        self.st["truwl_pair1"] = "gs://truwl-quertermous/{0}/{0}.1.fastq.gz".format(self.st['run_accession'])
-        self.st["truwl_pair2"] = "gs://truwl-quertermous/{0}/{0}.2.fastq.gz".format(self.st['run_accession'])
+        from utils.metautils import srpMeta
+        srp=srpMeta('SRP142360').process()
+        if gstype=='https':
+            prefix="https://storage.googleapis.com/truwl-quertermous"
+        elif gstype=='gs':
+            prefix="gs://truwl-quertermous/"
+        else:
+            raise ValueError("need a gstype of https or gs")
+        self.st["truwl_pair1"] = "{0}/{1}/{2}.1.fastq.gz".format(prefix,self.st['run_accession'],self.st['cell.line'])
+        self.st["truwl_pair2"] = "{0}/{1}/{2}.2.fastq.gz".format(prefix,self.st['run_accession'],self.st['cell.line'])
 
     def getSRRs(self):
         return(self.st['run_accession'].tolist())
@@ -39,6 +49,7 @@ class srpMeta():
         """
         files=[]
         filesofinterest=self.st[self.st['library_strategy']=='ATAC-seq'].copy()
+        files=list(filesofinterest['truwl_pair1'].astype(str))+list(+filesofinterest['truwl_pair2'].astype(str))
         
     def getRNASEQFiles(self,flatten=True,compress=True):
         """
@@ -48,6 +59,41 @@ class srpMeta():
         files=[]
         filesofinterest=self.st[self.st['library_strategy']=='ATAC-seq'].copy()
 
+    def getATACManifest(self):
+        cell_lines = self.st['cell.line'].tolist()
+#         {
+#     "atac.pipeline_type" : "atac",
+#     "atac.genome_tsv" : "https://storage.googleapis.com/encode-pipeline-genome-data/genome_tsv/v3/hg38.tsv",
+#     "atac.fastqs_rep1_R1" : [
+#         "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep1/pair1/ENCFF341MYG.subsampled.400.fastq.gz",
+#         "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep1/pair1/ENCFF106QGY.subsampled.400.fastq.gz"
+#     ],
+#     "atac.fastqs_rep1_R2" : [
+#         "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep1/pair2/ENCFF248EJF.subsampled.400.fastq.gz",
+#         "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep1/pair2/ENCFF368TYI.subsampled.400.fastq.gz"
+#     ],
+#     "atac.fastqs_rep2_R1" : [
+#         "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep2/pair1/ENCFF641SFZ.subsampled.400.fastq.gz",
+#         "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep2/pair1/ENCFF751XTV.subsampled.400.fastq.gz",
+#         "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep2/pair1/ENCFF927LSG.subsampled.400.fastq.gz",
+#         "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep2/pair1/ENCFF859BDM.subsampled.400.fastq.gz",
+#         "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep2/pair1/ENCFF193RRC.subsampled.400.fastq.gz",
+#         "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep2/pair1/ENCFF366DFI.subsampled.400.fastq.gz"
+#     ],
+#     "atac.fastqs_rep2_R2" : [
+#          "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep2/pair2/ENCFF031ARQ.subsampled.400.fastq.gz",
+#          "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep2/pair2/ENCFF590SYZ.subsampled.400.fastq.gz",
+#          "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep2/pair2/ENCFF734PEQ.subsampled.400.fastq.gz",
+#          "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep2/pair2/ENCFF007USV.subsampled.400.fastq.gz",
+#          "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep2/pair2/ENCFF886FSC.subsampled.400.fastq.gz",
+#          "https://storage.googleapis.com/encode-pipeline-test-samples/encode-atac-seq-pipeline/ENCSR356KRQ/fastq_subsampled/rep2/pair2/ENCFF573UXK.subsampled.400.fastq.gz"
+#     ],
+#     "atac.paired_end" : true,
+#     "atac.auto_detect_adapter" : true,
+#     "atac.enable_xcor" : true,
+#     "atac.title" : "ENCSR356KRQ (subsampled 1/400)",
+#     "atac.description" : "ATAC-seq on primary keratinocytes in day 0.0 of differentiation"
+# }
     
     def getAllFiles(self):
         getFilesFromRunList(self.populationRuns('ALL'))
