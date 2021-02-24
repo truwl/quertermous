@@ -21,33 +21,35 @@ class srpMeta():
         self.srp=SRP
         self.st = pandas.read_csv("metadata/"+SRP+".metadata",sep="\t")
         #cell.line not pandas friendly
-        self.st.columns = self.st.columns.str.replace('.', '')
+        self.st.columns = self.st.columns.str.replace('.', '',regex=False)
+        self.st.columns = self.st.columns.str.replace(' ', '',regex=False)
         #['NA06984.1.M_111124_4_1.fastq.gz', 'NA06984.1.M_111124_4_2.fastq.gz', 
     
     def process(self,gstype='gs'):
         #create the gs specific paths
         #gs://truwl-quertermous/SRR7058289/102901.1.fastq.gz
         #gs://truwl-quertermous/SRR7058289/102901.2.fastq.gz
-        from utils.metautils import srpMeta
-        srp=srpMeta('SRP142360').process()
+        #from utils.metautils import srpMeta
+        #srp=srpMeta('SRP142360').process()
         if gstype=='https':
             prefix="https://storage.googleapis.com/truwl-quertermous"
         elif gstype=='gs':
             prefix="gs://truwl-quertermous/"
         else:
             raise ValueError("need a gstype of https or gs")
-        self.st["truwl_pair1"] = "{0}/{1}/{2}.1.fastq.gz".format(prefix,self.st['run_accession'],self.st['cell.line'])
-        self.st["truwl_pair2"] = "{0}/{1}/{2}.2.fastq.gz".format(prefix,self.st['run_accession'],self.st['cell.line'])
+        self.st['truwl_pair1'] = self.st.apply(lambda x: "{0}/{1}/{2}.1.fastq.gz".format(prefix,x['run_accession'],x['cellline']), axis=1)
+        self.st['truwl_pair2'] = self.st.apply(lambda x: "{0}/{1}/{2}.2.fastq.gz".format(prefix,x['run_accession'],x['cellline']), axis=1)
 
     def getSRRs(self):
         return(self.st['run_accession'].tolist())
     
-    def getATACFiles(self,flatten=True,compress=True):
+    def getATACFiles(self,flatten=True,compress=True,gstype='gs'):
         """
         flatten - all files go in top directory vs SRP/EXP/SRR
         compress - .gz suffix
         """
         files=[]
+        self.process(gstype)
         filesofinterest=self.st[self.st['library_strategy']=='ATAC-seq'].copy()
         files=list(filesofinterest['truwl_pair1'].astype(str))+list(+filesofinterest['truwl_pair2'].astype(str))
         
@@ -60,7 +62,7 @@ class srpMeta():
         filesofinterest=self.st[self.st['library_strategy']=='ATAC-seq'].copy()
 
     def getATACManifest(self):
-        cell_lines = self.st['cell.line'].tolist()
+        cell_lines = self.st['cellline'].tolist()
 #         {
 #     "atac.pipeline_type" : "atac",
 #     "atac.genome_tsv" : "https://storage.googleapis.com/encode-pipeline-genome-data/genome_tsv/v3/hg38.tsv",
