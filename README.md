@@ -104,7 +104,7 @@ used the STAR 2-pass alignment pipeline
 We quantified intron excision levels using LeafCutter. In brief, we converted bam files to splice junction files using the `bam2junc.sh` script, and defined intron clusters using leafcutter_cluster.py with default parameters. This requires at least 30 reads supporting each cluster and at least 0.1% of reads supporting each intron within the cluster, and allows intron to have a maximum size of 100kb.
 
 ## ATAC-Seq
-We used the ENCODE ATAC-seq pipeline to perform alignment and peak calling (https://github.com/kundajelab/atac_dnase_pipelines)
+We used the ENCODE ATAC-seq pipeline to perform alignment and peak calling (https://github.com/kundajelab/atac_dnase_pipelines) (deprecated in 2018. Now https://github.com/ENCODE-DCC/atac-seq-pipeline)
 - Steps included in the pipeline
   - FASTQ files were trimmed with Cutadapt v1.93 and aligned with Bowtie2 v2.2.618 with default parameters. Duplicate reads were marked with Picard v1.126.
   - The alignment were converted to ENCODE tagAlign format. Records were shifted +4 and -5 for positive-strand and minus-strand reads.
