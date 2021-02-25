@@ -1,5 +1,5 @@
 # Reproduction of "Genetic regulatory mechanisms of smooth muscle cells map to coronary artery disease risk loci"
-[Boxiang Liu](https://github.com/boxiangliu), [Milos Pjanic](https://github.com/milospjanic), Ting Wang, Trieu Nguyen, Michael Gloudemans, Abhiram Rao, Victor G. Castano, Sylvia Nurnberg, Daniel J. Rader, Susannah Elwyn, Erik Ingelsson, Stephen B. Montgomery, Clint L. Miller, Thomas Quertermous
+[Boxiang Liu](https://github.com/boxiangliu), [Milos Pjanic](https://github.com/milospjanic), Ting Wang, Trieu Nguyen, Michael Gloudemans, [Abhiram Rao](https://github.com/coverdrive), Victor G. Castano, Sylvia Nurnberg, Daniel J. Rader, Susannah Elwyn, Erik Ingelsson, Stephen B. Montgomery, Clint L. Miller, Thomas Quertermous
 
 https://www.cell.com/ajhg/fulltext/S0002-9297(18)30267-2
 
