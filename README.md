@@ -1,6 +1,8 @@
 # Reproduction of "Genetic regulatory mechanisms of smooth muscle cells map to coronary artery disease risk loci"
 Boxiang Liu, Milos Pjanic, Ting Wang, Trieu Nguyen, Michael Gloudemans, Abhiram Rao, Victor G. Castano, Sylvia Nurnberg, Daniel J. Rader, Susannah Elwyn, Erik Ingelsson, Stephen B. Montgomery, Clint L. Miller, Thomas Quertermous
 
+https://www.cell.com/ajhg/fulltext/S0002-9297(18)30267-2
+
 > Coronary artery disease (CAD) is the leading cause of death globally. Genome-wide association studies (GWAS) have identified more than 95 independent loci that influence CAD risk, most of which reside in non-coding regions of the genome. To interpret these loci, we generated transcriptome and whole-genome datasets using human coronary artery smooth muscle cells (HCASMC) from 52 unrelated donors, as well as epigenomic datasets using ATAC-seq on a subset of 8 donors. Through systematic comparison with publicly available datasets from GTEx and ENCODE projects, we identified transcriptomic, epigenetic, and genetic regulatory mechanisms specific to HCASMC. We assessed the relevance of HCASMC to CAD risk using transcriptomic and epigenomic level analyses. By jointly modeling eQTL and GWAS datasets, we identified five genes (SIPA1, TCF21, SMAD3, FES, and PDGFRA) that modulate CAD risk through HCASMC, all of which have relevant functional roles in vascular remodeling. Comparison with GTEx data suggests that SIPA1 and PDGFRA influence CAD risk predominantly through HCASMC, while other annotated genes may have multiple cell and tissue targets. Together, these results provide new tissue-specific and mechanistic insights into the regulation of a critical vascular cell type associated with CAD in human populations.
 
 ## Data
@@ -72,7 +74,11 @@ http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE113348
 62    SRR7058290           SRX3989249          RNA-Seq TRANSCRIPTOMIC       SRS3213741 Illumina HiSeq 2500  3456815541 GSM3109116_r1       GSM3109116   1042702  3.22
 63    SRR7058289           SRX3989248          RNA-Seq TRANSCRIPTOMIC       SRS3213760 Illumina HiSeq 2500  4624545272 GSM3109115_r1       GSM3109115    102901  4.31
 ```
-## WGS
+
+## Computational methods
+From https://www.cell.com/cms/10.1016/j.ajhg.2018.08.001/attachment/333b9668-3bbc-4221-8d70-8ca5d21c6f30/mmc1.pdf
+
+### WGS
 - Whole-genome sequencing data were processed with the GATK best practices pipeline
 - Trimmed Illumina adapters using Cutadapt v1.93
 - Trimmed reads were aligned to the hg19 reference genome with Burrows-Wheeler Aligner (BWA) v0.7.124 using its bwa-mem module5 with parameters "-M -t 8 -R '@RG\tID:{sample}\tSM:{sample}\tPL:illumina\tLB:lib1\tPU:unit1'".
@@ -84,15 +90,15 @@ they are different from hg19. We then phased and imputed against 1000 Genomes pr
 phase 3 version 5a9
 - Variants with imputation allelic r2 less than 0.8 and Hardy-Weinberg Equilibrium p-value less than 1x10-6 were filtered out. 
 
-## RNA-Seq
-### Prep
+### RNA-Seq
+#### Prep
 Demultiplexing was performed with bcl2fastq script from Illumina.
 - Base quality control of demultiplexed sequences was done using FastQC v0.11.4 quality control tool
 - Fastq files that correspond to the unique sample were merged using a custom script.
 - Mapping of the reads was performed with STAR v2.4.0i11. In accordance to the GATK Best Practices for RNA-Seq we
 used the STAR 2-pass alignment pipeline
 
-### Alignment
+#### Alignment
 - First, reads contained in the raw fastq files were mapped to GRCh37/hg19 human genome using STAR and during the first alignment pass splice junctions were discovered with high stringency
 - Second pass mapping with STAR was then performed using a new index that was created with splice junction information contained in the file SJ.out.tab from the first pass STAR mapping
 - Splice junctions from the first pass were used as annotation in a second pass to permit lower stringency alignment, and therefore higher sensitivity
@@ -100,10 +106,10 @@ used the STAR 2-pass alignment pipeline
 - Read counts and RPKM were calculated with RNA-SeQC v1.1.813 using default parameters with additional flags `-n 1000 -noDoC -strictMode` using GENCODE v19 annotation
 - Allele-specific read counts were generated with the `createASVCF` module in RASQUAL
 
-### Splicing
+#### Splicing
 We quantified intron excision levels using LeafCutter. In brief, we converted bam files to splice junction files using the `bam2junc.sh` script, and defined intron clusters using leafcutter_cluster.py with default parameters. This requires at least 30 reads supporting each cluster and at least 0.1% of reads supporting each intron within the cluster, and allows intron to have a maximum size of 100kb.
 
-## ATAC-Seq
+### ATAC-Seq
 We used the ENCODE ATAC-seq pipeline to perform alignment and peak calling (https://github.com/kundajelab/atac_dnase_pipelines) (deprecated in 2018. Now https://github.com/ENCODE-DCC/atac-seq-pipeline)
 - Steps included in the pipeline
   - FASTQ files were trimmed with Cutadapt v1.93 and aligned with Bowtie2 v2.2.618 with default parameters. Duplicate reads were marked with Picard v1.126.
