@@ -1,7 +1,7 @@
 import pandas
 import os
 import sys
-
+import json
 #different readlengths for trimmomatic outputs
 READLENGTHS = [36,75]
 
@@ -17,12 +17,13 @@ READLENGTHS = [36,75]
 #read in an SPR metadata
 
 class srpMeta():
-    def __init__(self,SRP):
+    def __init__(self,SRP,gstype="gs"):
         self.srp=SRP
         self.st = pandas.read_csv("metadata/"+SRP+".metadata",sep="\t")
         #cell.line not pandas friendly
         self.st.columns = self.st.columns.str.replace('.', '',regex=False)
         self.st.columns = self.st.columns.str.replace(' ', '',regex=False)
+        self.process(gstype)
         #['NA06984.1.M_111124_4_1.fastq.gz', 'NA06984.1.M_111124_4_2.fastq.gz', 
     
     def process(self,gstype='gs'):
@@ -34,7 +35,7 @@ class srpMeta():
         if gstype=='https':
             prefix="https://storage.googleapis.com/truwl-quertermous"
         elif gstype=='gs':
-            prefix="gs://truwl-quertermous/"
+            prefix="gs://truwl-quertermous"
         else:
             raise ValueError("need a gstype of https or gs")
         self.st['truwl_pair1'] = self.st.apply(lambda x: "{0}/{1}/{2}.1.fastq.gz".format(prefix,x['run_accession'],x['cellline']), axis=1)
@@ -49,7 +50,6 @@ class srpMeta():
         compress - .gz suffix
         """
         files=[]
-        self.process(gstype)
         filesofinterest=self.st[self.st['library_strategy']=='ATAC-seq'].copy()
         files=list(filesofinterest['truwl_pair1'].astype(str))+list(+filesofinterest['truwl_pair2'].astype(str))
         
@@ -59,10 +59,32 @@ class srpMeta():
         compress - .gz suffix
         """
         files=[]
-        filesofinterest=self.st[self.st['library_strategy']=='ATAC-seq'].copy()
-
+        filesofinterest=self.st[self.st['library_strategy']=='RNA-seq'].copy()
+    
+    def getReplicatesofMate(self,strategy,cell,mate):
+        pair = "truwl_pair{}".format(mate)
+        print("looking for {} {} {}".format(strategy,cell,pair))
+        foi=self.st.loc[(self.st['library_strategy']==strategy) & (self.st['cellline']==cell), pair]
+        #foi=self.st.loc[(self.st['library_strategy']=='ATAC-seq') & (self.st['cellline']==2305)] #, pair]
+        print(foi)
+        files = list(foi.astype(str))
+        return(files)
+        
     def getATACManifest(self):
-        cell_lines = self.st['cellline'].tolist()
+        cells = list(set(self.st.loc[self.st['library_strategy']=='ATAC-seq', 'cellline'].astype(int)))
+        manifest = {}
+        manifest["atac.pipeline_type"] = "atac"
+        manifest["atac.genome_tsv"] = "https://storage.googleapis.com/encode-pipeline-genome-data/genome_tsv/v3/hg38.tsv"
+        manifest["atac.paired_end"] = "true"
+        manifest["atac.auto_detect_adapter"] = "true"
+        manifest["atac.enable_xcor"] = "true"
+        manifest["atac.title"] = "SRP142360ATAC"
+        manifest["atac.description"] = "ATAC-seq on human coronary artery smooth muscle cells (HCASMC)"
+        for i in range(len(cells)):
+            for pair in [1,2]:
+                reps=self.getReplicatesofMate('ATAC-seq',cells[i],pair)
+                manifest["acac.fastqs_rep{}_R{}".format(i,pair)] = reps
+        print(json.dumps(manifest, indent=4))
 #         {
 #     "atac.pipeline_type" : "atac",
 #     "atac.genome_tsv" : "https://storage.googleapis.com/encode-pipeline-genome-data/genome_tsv/v3/hg38.tsv",
@@ -93,7 +115,7 @@ class srpMeta():
 #     "atac.paired_end" : true,
 #     "atac.auto_detect_adapter" : true,
 #     "atac.enable_xcor" : true,
-#     "atac.title" : "ENCSR356KRQ (subsampled 1/400)",
+#     "atac.title" : "SRP142360ATAC",
 #     "atac.description" : "ATAC-seq on primary keratinocytes in day 0.0 of differentiation"
 # }
     
