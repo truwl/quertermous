@@ -1,4 +1,7 @@
-# Quertermous
+# Reproduction of "Genetic regulatory mechanisms of smooth muscle cells map to coronary artery disease risk loci"
+Boxiang Liu, Milos Pjanic, Ting Wang, Trieu Nguyen, Michael Gloudemans, Abhiram Rao, Victor G. Castano, Sylvia Nurnberg, Daniel J. Rader, Susannah Elwyn, Erik Ingelsson, Stephen B. Montgomery, Clint L. Miller, Thomas Quertermous
+
+> Coronary artery disease (CAD) is the leading cause of death globally. Genome-wide association studies (GWAS) have identified more than 95 independent loci that influence CAD risk, most of which reside in non-coding regions of the genome. To interpret these loci, we generated transcriptome and whole-genome datasets using human coronary artery smooth muscle cells (HCASMC) from 52 unrelated donors, as well as epigenomic datasets using ATAC-seq on a subset of 8 donors. Through systematic comparison with publicly available datasets from GTEx and ENCODE projects, we identified transcriptomic, epigenetic, and genetic regulatory mechanisms specific to HCASMC. We assessed the relevance of HCASMC to CAD risk using transcriptomic and epigenomic level analyses. By jointly modeling eQTL and GWAS datasets, we identified five genes (SIPA1, TCF21, SMAD3, FES, and PDGFRA) that modulate CAD risk through HCASMC, all of which have relevant functional roles in vascular remodeling. Comparison with GTEx data suggests that SIPA1 and PDGFRA influence CAD risk predominantly through HCASMC, while other annotated genes may have multiple cell and tissue targets. Together, these results provide new tissue-specific and mechanistic insights into the regulation of a critical vascular cell type associated with CAD in human populations.
 
 ## Data
 http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE113348
@@ -94,7 +97,7 @@ used the STAR 2-pass alignment pipeline
 - Second pass mapping with STAR was then performed using a new index that was created with splice junction information contained in the file SJ.out.tab from the first pass STAR mapping
 - Splice junctions from the first pass were used as annotation in a second pass to permit lower stringency alignment, and therefore higher sensitivity
 - Prior to gene expression quantification, we used WASP12 to filter out reads that are prone to mapping bias.
-- Read counts and RPKM were calculated with RNA-SeQC v1.1.813 using default parameters with additional flags `-n 1000 -noDoC -strictMode`”` using GENCODE v19 annotation
+- Read counts and RPKM were calculated with RNA-SeQC v1.1.813 using default parameters with additional flags `-n 1000 -noDoC -strictMode` using GENCODE v19 annotation
 - Allele-specific read counts were generated with the `createASVCF` module in RASQUAL
 
 ### Splicing
