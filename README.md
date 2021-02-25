@@ -93,16 +93,18 @@ used the STAR 2-pass alignment pipeline
 - First, reads contained in the raw fastq files were mapped to GRCh37/hg19 human genome using STAR and during the first alignment pass splice junctions were discovered with high stringency
 - Second pass mapping with STAR was then performed using a new index that was created with splice junction information contained in the file SJ.out.tab from the first pass STAR mapping
 - Splice junctions from the first pass were used as annotation in a second pass to permit lower stringency alignment, and therefore higher sensitivity
-- Prior to gene expression quantification, we used WASP12 to filter out reads that are prone to mapping bias. Read counts and RPKM were calculated with RNA-SeQC v1.1.813 using default parameters with additional flags “-n 1000 -noDoC -strictMode” using GENCODE v19 annotation14. Allele-specific read counts were generated with the createASVCF module in RASQUAL7
+- Prior to gene expression quantification, we used WASP12 to filter out reads that are prone to mapping bias.
+- Read counts and RPKM were calculated with RNA-SeQC v1.1.813 using default parameters with additional flags `-n 1000 -noDoC -strictMode`”` using GENCODE v19 annotation
+- Allele-specific read counts were generated with the `createASVCF` module in RASQUAL
 
 ### Splicing
-We quantified intron excision levels using LeafCutter15. In brief, we converted bam files to splice junction files using the bam2junc.sh script, and defined intron clusters using leafcutter_cluster.py with default parameters. This requires at least 30 reads supporting each cluster and at least 0.1% of reads supporting each intron within the cluster, and allows intron to have a maximum size of 100kb.
+We quantified intron excision levels using LeafCutter. In brief, we converted bam files to splice junction files using the `bam2junc.sh` script, and defined intron clusters using leafcutter_cluster.py with default parameters. This requires at least 30 reads supporting each cluster and at least 0.1% of reads supporting each intron within the cluster, and allows intron to have a maximum size of 100kb.
 
 ## ATAC-Seq
 We used the ENCODE ATAC-seq pipeline to perform alignment and peak calling (https://github.com/kundajelab/atac_dnase_pipelines)
-Steps included in the pipeline
-- FASTQ files were trimmed with Cutadapt v1.93 and aligned with Bowtie2 v2.2.618 with default parameters. Duplicate reads were marked with Picard v1.126.
-- The alignment were converted to ENCODE tagAlign format. Records were shifted +4 and -5 for positive-strand and minus-strand reads.
-- MACS2 v2.0.819 was used to call peaks with default parameters. Each alignment was split into two pseudoreplicate (subsample of reads) and peaks were called independently.
-- Irreproducible Discovery Rate (IDR) 20 analyses were performed based on pseudo-replicates with a cutoff of 0.1 to output an IDR call set, which was used for downstream analysis.
+- Steps included in the pipeline
+  - FASTQ files were trimmed with Cutadapt v1.93 and aligned with Bowtie2 v2.2.618 with default parameters. Duplicate reads were marked with Picard v1.126.
+  - The alignment were converted to ENCODE tagAlign format. Records were shifted +4 and -5 for positive-strand and minus-strand reads.
+  - MACS2 v2.0.819 was used to call peaks with default parameters. Each alignment was split into two pseudoreplicate (subsample of reads) and peaks were called independently.
+  - Irreproducible Discovery Rate (IDR) 20 analyses were performed based on pseudo-replicates with a cutoff of 0.1 to output an IDR call set, which was used for downstream analysis.
 - We used WASP12 to filter out reads that are prone to mapping bias.
